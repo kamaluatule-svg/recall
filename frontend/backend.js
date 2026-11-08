@@ -1,4 +1,4 @@
-// Recall backend client: Firebase Google sign-in + authenticated calls to the Recall API.
+﻿// Recall backend client: Firebase Google sign-in + authenticated calls to the Recall API.
 // Loaded before app.js. Exposes window.RecallBackend.
 (function () {
   const cfg = window.RECALL_CONFIG || {};
@@ -8,6 +8,7 @@
   );
   let auth = null;
   let queue = Promise.resolve();
+  let warmupStarted = false;
 
   const api = (path) => `${cfg.apiUrl.replace(/\/+$/, '')}/api/v1${path}`;
 
@@ -60,10 +61,26 @@
       if (!firebase.apps.length) firebase.initializeApp(fb);
       auth = firebase.auth();
       this.ready = true;
+      this.warmApi();
       return true;
     },
-    onAuthChange(cb) {
-      return auth.onAuthStateChanged((u) => cb(toUser(u)));
+    // Wake the free Render instance while the user is viewing the landing page.
+    // The response body is not needed; this GET is only a best-effort warm-up.
+    warmApi() {
+      if (warmupStarted || !cfg.apiUrl) return;
+      warmupStarted = true;
+      fetch(`${cfg.apiUrl.replace(/\/+$/, '')}/health`, {
+        method: 'GET',
+        mode: 'no-cors',
+        cache: 'no-store',
+        signal: AbortSignal.timeout(65000),
+      }).catch(() => {});
+    },
+    onAuthChange(cb, onError) {
+      return auth.onAuthStateChanged(
+        (u) => cb(toUser(u)),
+        (error) => { if (onError) onError(error); },
+      );
     },
     async signInWithGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
