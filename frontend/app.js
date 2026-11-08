@@ -7,7 +7,7 @@ const starter={decks:[],sessions:[],createdAt:Date.now()};
 const requestedPage=new URLSearchParams(location.search).get('view');
 const requestedView=requestedPage==='library'?'library':requestedPage==='cards'?'cards':'dashboard';
 let state=loadState(),view=requestedView,activeDeckId=null,study=null,toastTimer,lastToastMessage='',lastToastAt=0,libraryFilter='all';
-let user=null,authReady=false;
+let user=null,authReady=false;`r`nlet installPrompt=null;
 function dashboard(){
   const all=allCards(),s=stats(),learned=all.filter(card=>card.interval>0).length,mastered=all.filter(card=>card.interval>=7).length;
   const displayName=user?.guest?'there':(user?.user_metadata?.full_name||user?.user_metadata?.name||user?.email?.split('@')[0]||'there');
@@ -125,7 +125,6 @@ document.querySelectorAll('button.nav-item[data-view]').forEach(b=>b.addEventLis
 initMobileNavigation();
 bootAuth();
 window.exitRecallSession=async()=>{if(user?.guest){sessionStorage.removeItem(GUEST_SESSION_KEY);user=null;state=loadState();render();return}if(window.RecallBackend?.ready){await RecallBackend.flush();await RecallBackend.signOut()}};
-let installPrompt=null;
 function updateInstallButtons(){document.querySelectorAll('[data-install]').forEach(button=>button.hidden=!installPrompt)}
 window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;updateInstallButtons()});
 document.addEventListener('click',async event=>{const button=event.target.closest('[data-install]');if(!button||!installPrompt)return;installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;document.querySelectorAll('[data-install]').forEach(item=>item.hidden=true)});
