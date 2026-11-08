@@ -7,7 +7,8 @@ const starter={decks:[],sessions:[],createdAt:Date.now()};
 const requestedPage=new URLSearchParams(location.search).get('view');
 const requestedView=requestedPage==='library'?'library':requestedPage==='cards'?'cards':'dashboard';
 let state=loadState(),view=requestedView,activeDeckId=null,study=null,toastTimer,lastToastMessage='',lastToastAt=0,libraryFilter='all';
-let user=null,authReady=false;`r`nlet installPrompt=null;
+let user=null,authReady=false;
+let installPrompt=null;
 function dashboard(){
   const all=allCards(),s=stats(),learned=all.filter(card=>card.interval>0).length,mastered=all.filter(card=>card.interval>=7).length;
   const displayName=user?.guest?'there':(user?.user_metadata?.full_name||user?.user_metadata?.name||user?.email?.split('@')[0]||'there');
