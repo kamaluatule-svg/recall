@@ -4,7 +4,7 @@
 // apiUrl   -> your Render service (local dev: http://localhost:8080)
 // firebase -> Firebase console > Project settings > General > Your apps > Web app
 window.RECALL_CONFIG = {
-  apiUrl: 'YOUR_RENDER_API_URL', // e.g. https://recall-api.onrender.com
+  apiUrl: 'https://recall-1-5ymj.onrender.com', // e.g. https://recall-api.onrender.com
   firebase: {
     apiKey: 'AIzaSyBiqowl_BFGfqF7NT07Ha8c7hUjtNrnTSg',
     authDomain: 'recall-8ef18.firebaseapp.com',
