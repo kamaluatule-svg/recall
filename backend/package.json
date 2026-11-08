@@ -1,0 +1,17 @@
+{
+  "name": "recall-api",
+  "version": "1.0.0",
+  "description": "Recall REST API: verifies Firebase ID tokens and stores study data in Supabase.",
+  "private": true,
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch --env-file=.env src/server.js",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
